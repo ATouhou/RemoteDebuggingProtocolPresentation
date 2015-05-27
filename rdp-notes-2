@@ -1,10 +1,10 @@
-/Applications/Google\ Chrome\ Canary.app/Contents/MacOS/Google\ Chrome\ Canary --remote-debugging-port=9222
-
-http://localhost:9222/json
-
-var ws = new WebSocket('ws://localhost:9222/devtools/page/123')
-
-ws.send('{"id":1,"method":"DOM.enable"}')
+- /Applications/Google\ Chrome\ Canary.app/Contents/MacOS/Google\ Chrome\ Canary --remote-debugging-port=9222
+- http://localhost:9222/json
+- var ws = new WebSocket('ws://localhost:9222/devtools/page/123')
+- ws.addEventListener('message', function(msg) {
+      console.log(msg.data);
+      });
+- ws.send('{"id":1,"method":"Page.navigate","params":{"url":"http://wikipedia.pl"}}');
 
 function send(method, params) {
  var data = {
@@ -15,7 +15,9 @@ function send(method, params) {
  ws.send(JSON.stringify(data));
 }
 
-send('Page.navigate', {url: 'http://smashingmagazine.com'})
+send('DOM.enable')
+
+send('DOM.getDocument')
 
 send('DOM.querySelector', {
     nodeId: 1,
@@ -28,7 +30,3 @@ send('DOM.highlightNode', {
       contentColor: {r:255,g:0,b:0,a:0.5}
     }
   })
-
-send('DOM.hideHighlight')
-
-send(Page.captureScreenshot')
