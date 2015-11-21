@@ -1,4 +1,0 @@
---- open inspector.js
---- search for ws://
---- point out protocol.json
---- conditional breakpoint in _sendMessageToBackend (`console.log(method, params); false;`)

@@ -1,118 +1,155 @@
 <!doctype html>
 <html lang="en">
 
-	<head>
-		<meta charset="utf-8">
+<head>
+    <meta charset="utf-8">
 
-		<title>Chrome DevTools Internals - Debugging Protocol</title>
+    <title>Chrome DevTools Internals - Debugging Protocol</title>
 
-		<meta name="description" content="Chrome DevTools Internals - Debugging Protocol">
-		<meta name="author" content="Konrad Dzwinel">
+    <meta name="description" content="Chrome DevTools Internals - Debugging Protocol">
+    <meta name="author" content="Konrad Dzwinel">
 
-		<meta name="apple-mobile-web-app-capable" content="yes" />
-		<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-capable" content="yes"/>
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
 
-		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
 
-        <link href='https://fonts.googleapis.com/css?family=Lato&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
 
-		<link rel="stylesheet" href="css/reveal.css">
-		<link rel="stylesheet" href="css/theme/my.css" id="theme">
+    <link rel="stylesheet" href="css/lato.css">
+    <link rel="stylesheet" href="css/reveal.css">
+    <link rel="stylesheet" href="css/theme/my.css" id="theme">
 
-		<!-- Code syntax highlighting -->
-		<link rel="stylesheet" href="lib/css/zenburn.css">
+    <!-- Code syntax highlighting -->
+    <link rel="stylesheet" href="lib/css/zenburn.css">
 
-		<!-- Printing and PDF exports -->
-		<script>
-			var link = document.createElement( 'link' );
-			link.rel = 'stylesheet';
-			link.type = 'text/css';
-			link.href = window.location.search.match( /print-pdf/gi ) ? 'css/print/pdf.css' : 'css/print/paper.css';
-			document.getElementsByTagName( 'head' )[0].appendChild( link );
-		</script>
-	</head>
+    <!-- Printing and PDF exports -->
+    <script>
+        var link = document.createElement('link');
+        link.rel = 'stylesheet';
+        link.type = 'text/css';
+        link.href = window.location.search.match(/print-pdf/gi) ? 'css/print/pdf.css' : 'css/print/paper.css';
+        document.getElementsByTagName('head')[0].appendChild(link);
+    </script>
 
-	<body>
+    <!--[if lt IE 9]>
+    <script src="lib/js/html5shiv.js"></script>
+    <![endif]-->
+</head>
 
-		<div class="reveal">
+<body>
 
-			<!-- Any section element inside of this container is displayed as a slide -->
-			<div class="slides">
-				<section>
-					<h4>Chrome DevTools Internals:</h4>
-					<h1>Debugging Protocol</h1>
-					<p style="margin-top: 200px; opacity: 0.7;">
-						<small>Konrad Dzwinel &middot; <a href="http://twitter.com/kdzwinel">@kdzwinel</a></small>
-					</p>
-				</section>
+<div class="reveal">
 
-				<section>
-					<h2>Hello!</h2>
-				</section>
+    <!-- Any section element inside of this container is displayed as a slide -->
+    <div class="slides">
+        <section class="slide" style="background-color: white">
+            <h4>Looking under the hood of</h4>
 
-                <section data-background="#e6e6e6">
-                    <img height="600" data-src="lib/img/brainly.png" alt="Brain.ly" class="bigshadow" />
-                </section>
+            <h1>Chrome DevTools</h1>
 
-                <section data-background="#F4F4F4">
-                    <img height="300" data-src="lib/img/gde.svg" alt="Google Developer Expert" class="clean" />
-                </section>
+            <div class='first-contact'>
+                <p>Konrad Dzwinel</p>
+            </div>
+        </section>
 
-                <section data-background="">
-                    <img height="600" data-src="lib/img/edl.png" alt="EDL" class="clean" />
-                </section>
+        <section>
+            <h2>Hello!</h2>
+        </section>
 
-                <section data-background="">
-                    <img height="600" data-src="lib/img/devtools.png" alt="Chrome DevTools" class="clean" />
-                </section>
+        <section data-background="#aae1ff">
+            <img src='lib/img/europe.svg' class="clean" style='width:600px;'/>
+        </section>
 
-                <section data-background="">
-                    <a href="https://code.google.com/p/chromium/codesearch#chromium/src/third_party/WebKit/Source/devtools/protocol.json">
-                        <img height="600" data-src="lib/img/protocol-json.png" alt="protocol.json file in Chromium code" class="clean" />
-                    </a>
-                </section>
+        <section data-background="#c5dedf">
+            <img height="600" data-src="lib/img/brainly.png" alt="Brain.ly" class="clean"/>
+        </section>
 
-                <section data-background="">
-                    <a href="https://chromedevtools.github.io/debugger-protocol-viewer/">
-                        <img height="600" data-src="lib/img/protocol-viewer.png" alt="debugger protocol viewer" class="clean" />
-                    </a>
-                </section>
+        <section data-background="#D5D8E8">
+            <img height="300" data-src="lib/img/gde.svg" alt="Google Developer Expert" class="clean"/>
+        </section>
 
-                <section data-background="">
-                    <h2>Examples</h2>
-                    <ul>
-                        <li>DOM.highlightNode</li>
-                        <li>Network.setUserAgentOverride</li>
-                        <li>Debugger.setBreakpoint</li>
-                        <li>Runtime.evaluate</li>
-                        <li>HeapProfiler.takeHeapSnapshot</li>
-                        <li>...</li>
-                    </ul>
-                </section>
+        <section data-background="">
+            <img height="600" data-src="lib/img/devtools.png" alt="Chrome DevTools" class="clean"/>
+        </section>
 
-                <section data-background="">
-                    <div style="width:900px;height:700px">
-                        <img width="450" data-src="lib/img/browser.png" alt="browser window" style="position: absolute; left:0; top:0" class="clean"/>
-                        <img width="450" data-src="lib/img/devtools.png" alt="devtools window" style="position: absolute; right:0; bottom:0" class="clean fragment fade-in"/>
-                        <img data-src="lib/img/arrow.png" alt="debugging protocol" style="position: absolute;left: 330px;top: 240px;" class="clean fragment fade-in"/>
-                    </div>
-                </section>
+        <section data-background="#F7E8E3">
+            <a href="https://github.com/ChromeDevTools/EmulatedDeviceLab"><img height="600" data-src="lib/img/edl.png"
+                                                                               alt="EDL" class="clean"/></a>
+        </section>
 
-                <section data-background="">
-                    <img data-src="lib/img/remote-debug.png" alt="remote debugging mobile devices" class="clean"/>
-                </section>
+        <section data-background="">
+            <h2>Remote Debugging Protocol</h2>
+            <ul>
+                <li>DOM.highlightNode</li>
+                <li>Network.setUserAgentOverride</li>
+                <li>Debugger.setBreakpoint</li>
+                <li>Runtime.evaluate</li>
+                <li>HeapProfiler.takeHeapSnapshot</li>
+                <li><strong>+280 more</strong></li>
+            </ul>
+        </section>
 
-                <section data-background="">
-                    <div style="width:900px;height:700px">
-                        <img width="450" data-src="lib/img/browser.png" alt="browser window" style="position: absolute; left:0; top:0" class="clean"/>
-                        <img width="450" data-src="lib/img/devtools.png" alt="devtools window" style="position: absolute; right:0; bottom:0" class="clean fragment fade-out"/>
-                        <img width="450" data-src="lib/img/webstorm.png" alt="WebStorm" style="position: absolute; right:0; bottom:90px" class="clean fragment fade-in"/>
-                        <img data-src="lib/img/arrow.png" alt="debugging protocol" style="position: absolute;left: 330px;top: 240px;" class="clean"/>
-                    </div>
-                </section>
+        <section data-background="">
+            <a href="https://code.google.com/p/chromium/codesearch#chromium/src/third_party/WebKit/Source/devtools/protocol.json">
+                <img height="600" data-src="lib/img/protocol-json.png" alt="protocol.json file in Chromium repository"
+                     class="clean"/>
+            </a>
+        </section>
 
-                <section data-background="">
-                    <h2>Editors/IDE</h2>
+        <section data-background="#E5EBFF">
+            <a href="https://chromedevtools.github.io/debugger-protocol-viewer/">
+                <img height="600" data-src="lib/img/protocol-viewer.png" alt="debugger protocol viewer" class="clean"/>
+            </a>
+        </section>
+
+        <section data-background="">
+            <div style="width:900px;height:700px">
+                <img width="450" data-src="lib/img/browser.png" alt="browser window"
+                     style="position: absolute; left:0; top:0" class="clean"/>
+                <img width="450" data-src="lib/img/devtools.png" alt="devtools window"
+                     style="position: absolute; right:0; bottom:0" class="clean fragment fade-in"/>
+                <img data-src="lib/img/arrow.png" alt="debugging protocol"
+                     style="position: absolute;left: 330px;top: 240px;" class="clean fragment fade-in"/>
+            </div>
+        </section>
+
+        <section data-background="#C3E4D5">
+            <img data-src="lib/img/remote-debug.png" alt="remote debugging mobile devices" class="clean"/>
+        </section>
+
+        <section data-background="">
+            <a href="https://kenneth.io/blog/2015/06/16/use-chrome-devtools-to-debug-your-users-browser-remotely-with-browserremote/">
+                <img data-src="lib/img/remote-debug-ext.jpg" alt="remote debugging websites over the Internet"
+                     class="clean"/>
+            </a>
+        </section>
+
+        <section data-background="">
+            <div style="width:900px;height:700px">
+                <img width="450" data-src="lib/img/browser.png" alt="browser window"
+                     style="position: absolute; left:0; top:0" class="clean"/>
+                <img width="450" data-src="lib/img/devtools.png" alt="devtools window"
+                     style="position: absolute; right:0; bottom:0" class="clean fragment fade-out"/>
+
+                <div
+                        style="position: absolute; right: 220px; bottom:110px; font-size: 150px"
+                        class="clean fragment fade-in">
+                    ?
+                </div>
+                <img data-src="lib/img/arrow.png" alt="debugging protocol"
+                     style="position: absolute;left: 330px;top: 240px;" class="clean"/>
+            </div>
+        </section>
+
+        <section data-background="">
+            <div style="display: flex; flex-direction: row; width: 1000px;">
+                <div style="flex: 0 0 400px; display: block;">
+                    <img src="lib/img/webstorm.png" class="clean"/>
+                </div>
+
+                <div style="flex: 0 0 400px; display: block;">
+                    <h2>Editors &amp; IDEs</h2>
                     <ul>
                         <li>Brackets</li>
                         <li>Light Table</li>
@@ -120,127 +157,206 @@
                         <li>WebStorm</li>
                         <li>Vi</li>
                     </ul>
-                </section>
+                </div>
+            </div>
+        </section>
 
-                <section data-background="">
-                    <div style="width:900px;height:700px">
-                        <img width="450" data-src="lib/img/browser.png" alt="browser window" style="position: absolute; left:0; top:0" class="clean"/>
-                        <img width="450" data-src="lib/img/devtools.png" alt="devtools window" style="position: absolute; right:0; bottom:0" class="clean fragment fade-out"/>
-                        <img width="450" data-src="lib/img/console.png" alt="Console/terminal" style="position: absolute; right:0; bottom:0" class="clean fragment fade-in"/>
-                        <img data-src="lib/img/arrow.png" alt="debugging protocol" style="position: absolute;left: 330px;top: 240px;" class="clean"/>
-                    </div>
-                </section>
-
-                <section data-background="">
-                    <h2>Monitoring/Testing/Other</h2>
+        <section data-background="">
+            <div style="display: flex; flex-direction: row; width: 1000px;">
+                <div style="flex: 0 0 400px; display: block;">
+                    <img src="lib/img/bigrig.png" class="clean"/>
+                </div>
+                <div>
+                    <h2>Monitoring &amp; Testing</h2>
                     <ul>
                         <li><a href="https://www.chromium.org/developers/telemetry">Telemetry</a></li>
+                        <li><a href="https://github.com/samccone/drool">Drool</a></li>
                         <li><a href="http://docs.seleniumhq.org/projects/webdriver/">Selenium WebDriver</a></li>
-                        <li><a href="https://www.npmjs.com/package/amok">amok</a></li>
-                        <li><a href="https://github.com/sidorares/crconsole">crconsole</a></li>
+                        <li><a href="https://github.com/GoogleChrome/node-big-rig">BigRig</a></li>
+                        <!-- <li><a href="https://www.npmjs.com/package/amok">amok</a></li> -->
+                        <!-- <li><a href="https://github.com/sidorares/crconsole">crconsole</a></li> -->
                     </ul>
-                </section>
+                </div>
+            </div>
+        </section>
 
-                <section>
-                    <h2>chrome-remote-interface</h2>
+        <section>
+            <h2>chrome-remote-interface</h2>
                     <pre><code data-trim contenteditable>
-    var Chrome = require('chrome-remote-interface');
+var Chrome = require('chrome-remote-interface');
 
-    Chrome(function (chrome) {
-        with (chrome) {
-            Network.requestWillBeSent(function (params) {
-                console.log(params.request.url);
-            });
-            Network.enable();
-            Page.enable();
-            once('ready', function () {
-                Page.navigate({'url': 'https://github.com'});
-            });
-        }
-    }).on('error', function () {
-        console.error('Cannot connect to Chrome');
-    });
-                    </code></pre>
-                </section>
-
-                <section>
-                    <h2>Chrome extensions - debugger API</h2>
-                    <pre><code data-trim contenteditable>
-                        chrome.debugger.attach({
-    tabId: tabId
-}, '1.1');
-
-chrome.debugger.sendCommand({
-    tabId: tabId
-}, 'Page.navigate', {
-    url: 'https://github.com'
-}, function (response) {
-    if (response.error) {
-        console.error(response.error);
-        return;
+Chrome(function (chrome) {
+    with (chrome) {
+        Network.enable();
+        Page.enable();
+        // log all requests before they are sent
+        Network.requestWillBeSent(function (params) {
+            console.log(params.request.url);
+        });
+        // once page loads, navigate to another page
+        once('ready', function () {
+            Page.navigate({'url': 'https://github.com'});
+        });
     }
+ });
+                    </code></pre>
+        </section>
+
+        <section>
+            <h2>Chrome extensions - debugger API</h2>
+                    <pre><code data-trim contenteditable>
+// attach debugger to a specific tab
+chrome.debugger.attach({
+    tabId: tabId
+}, '1.1', function() {
+    // navigate to another page
+    chrome.debugger.sendCommand({
+        tabId: tabId
+    }, 'Page.navigate', {
+        url: 'https://github.com'
+    });
 });
                     </code></pre>
-                </section>
+        </section>
 
-                <section data-background="">
-                    <div style="width:900px;height:700px">
-                        <img width="450" data-src="lib/img/browser.png" alt="browser window" style="position: absolute; left:0; top:0" class="clean fragment fade-out"/>
-                        <img width="450" data-src="lib/img/devtools.png" alt="devtools window" style="position: absolute; right:0; bottom:0" class="clean"/>
-                        <img height="450" data-src="lib/img/swift-java-node.png" alt="Swift/Java/Node" style="position: absolute; left:120px; top:0; height: 320px" class="clean fragment fade-in"/>
-                        <img data-src="lib/img/arrow.png" alt="debugging protocol" style="position: absolute;left: 330px;top: 240px;" class="clean"/>
-                    </div>
-                </section>
+        <section data-background="#C1DA95">
+            <a href="https://github.com/kdzwinel/DevToolsVoiceCommands">
+                <img height="600" data-src="lib/img/voice-commands.png" alt="DevTools voice commands" class="clean"/>
+            </a>
+        </section>
 
-                <section data-background="">
-                    <h2>Alternative DevTools "back-ends"</h2>
-                    <ul>
-                        <li>Android - <a href="https://code.facebook.com/posts/393927910787513/stetho-a-new-debugging-platform-for-android/">Stetho</a></li>
-                        <li>iPhone - <a href="https://github.com/square/PonyDebugger">PonnyDebugger</a></li>
-                        <li>Node.js - <a href="https://github.com/node-inspector/node-inspector">Node-inspector</a></li>
-                    </ul>
-                </section>
+        <section data-background="">
+            <div style="width:900px;height:700px">
+                <img width="450" data-src="lib/img/browser.png" alt="browser window"
+                     style="position: absolute; left:0; top:0" class="clean fragment fade-out"/>
+                <img width="450" data-src="lib/img/devtools.png" alt="devtools window"
+                     style="position: absolute; right:0; bottom:0" class="clean"/>
 
-                <section>
-                    <img width="600" data-src="lib/img/remotedebug.png" alt="RemoteDebug" class="clean"/>
-                </section>
+                <div
+                        style="position: absolute; left: 220px; top:110px; font-size: 150px"
+                        class="clean fragment fade-in">
+                    ?
+                </div>
+                <img data-src="lib/img/arrow.png" alt="debugging protocol"
+                     style="position: absolute;left: 330px;top: 240px;" class="clean"/>
+            </div>
+        </section>
 
-				<section style="text-align: left;">
-					<h1>Thanks!</h1>
-				</section>
+        <section data-background="">
+            <h2>Alternative DevTools "back-ends"</h2>
+            <ul>
+                <li>Android - <a
+                        href="https://code.facebook.com/posts/393927910787513/stetho-a-new-debugging-platform-for-android/">Stetho</a>
+                </li>
+                <li>iPhone - <a href="https://github.com/square/PonyDebugger">PonnyDebugger</a></li>
+                <li>Node.js - <a href="https://github.com/node-inspector/node-inspector">Node-inspector</a></li>
+            </ul>
+        </section>
 
-			</div>
+        <section data-background="#166C94">
+            <a href="https://github.com/kdzwinel/betwixt">
+                <img height="600" data-src="lib/img/betwixt.png" alt="Betwixt - network analyzer" class="clean"/>
+            </a>
+        </section>
 
-		</div>
+        <section>
+            <div style='width:900px;height:700px'>
+                <img data-src="lib/img/browsers-devtools-chrome.png" class='clean'
+                     style='position: absolute;top:0;left:0;background:white'/>
+                <img data-src="lib/img/browsers-devtools.png" class='clean fragment fade-in'
+                     style='position: absolute;top:0;left:0'/>
+                <img data-src="lib/img/browsers-devtools-blackbox.png" class="clean fragment fade-in"
+                     style='position: absolute;top:0;left:0'/>
+            </div>
+        </section>
 
-		<script src="lib/js/head.min.js"></script>
-		<script src="js/reveal.js"></script>
+        <section>
+            <h2>Debugging protocol adapters</h2>
 
-		<script>
+            <ul>
+                <li>Chrome → IE11 - <a href="https://github.com/Microsoft/IEDiagnosticsAdapter">IEDiagnosticsAdapter</a>
+                </li>
+                <li>Chrome → Safari - <a href="https://github.com/google/ios-webkit-debug-proxy/">iOS WebKit Debug
+                    Proxy</a></li>
+                <li>Chrome → Firefox - <a href="https://github.com/RemoteDebug/remotedebug-firefox-adapter">RemoteDebug
+                    Firefox Adaptor</a></li>
+                <li>Firefox → Safari, Chrome - <a
+                        href="https://developer.mozilla.org/en-US/docs/Tools/Valence">Valence</a></li>
+            </ul>
+        </section>
 
-			// Full list of configuration options available at:
-			// https://github.com/hakimel/reveal.js#configuration
-			Reveal.initialize({
-				controls: false,
-				progress: true,
-				history: true,
-				center: true,
-                fragments: true,
+        <section>
+            <a href='http://remotedebug.org/'><img width="300" data-src="lib/img/remotedebug-logo.svg" alt="RemoteDebug"
+                                                   class="clean"/></a>
+        </section>
 
-				transition: 'slide', // none/fade/slide/convex/concave/zoom
+        <section>
+            <h1>Wrap-up</h1>
+        </section>
 
-				// Optional reveal.js plugins
-				dependencies: [
-					{ src: 'lib/js/classList.js', condition: function() { return !document.body.classList; } },
-					{ src: 'plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
-					{ src: 'plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
-					{ src: 'plugin/highlight/highlight.js', async: true, condition: function() { return !!document.querySelector( 'pre code' ); }, callback: function() { hljs.initHighlightingOnLoad(); } },
-					{ src: 'plugin/zoom-js/zoom.js', async: true },
-					{ src: 'plugin/notes/notes.js', async: true }
-				]
-			});
+        <section>
+            <div style="width: 960px; height: 700px; display: flex; align-items: center; vertical-align: middle">
+                <h1>Thanks!</h1>
 
-		</script>
+                <div class='contact'>
+                    <a href='https://twitter.com/kdzwinel'><img class='clean' src='lib/img/logos/twitter.svg'/></a>
+                    <a href='mailto:kdzwinel@gmail.com'><img class='clean' src='lib/img/logos/gmail.svg'/></a>
+                    <a href='https://github.com/kdzwinel'><img class='clean' src='lib/img/logos/gh.png'/></a>
+                    @kdzwinel
+                </div>
+            </div>
+        </section>
 
-	</body>
+    </div>
+
+</div>
+
+<script src="lib/js/head.min.js"></script>
+<script src="js/reveal.js"></script>
+
+<script>
+
+    // Full list of configuration options available at:
+    // https://github.com/hakimel/reveal.js#configuration
+    Reveal.initialize({
+        controls: false,
+        progress: true,
+        history: true,
+        center: true,
+        fragments: true,
+
+        transition: 'slide', // none/fade/slide/convex/concave/zoom
+
+        // Optional reveal.js plugins
+        dependencies: [
+            {
+                src: 'lib/js/classList.js', condition: function () {
+                return !document.body.classList;
+            }
+            },
+            {
+                src: 'plugin/markdown/marked.js', condition: function () {
+                return !!document.querySelector('[data-markdown]');
+            }
+            },
+            {
+                src: 'plugin/markdown/markdown.js', condition: function () {
+                return !!document.querySelector('[data-markdown]');
+            }
+            },
+            {
+                src: 'plugin/highlight/highlight.js', async: true, condition: function () {
+                return !!document.querySelector('pre code');
+            }, callback: function () {
+                hljs.initHighlightingOnLoad();
+            }
+            },
+            {src: 'plugin/zoom-js/zoom.js', async: true},
+            {src: 'plugin/notes/notes.js', async: true}
+        ]
+    });
+
+</script>
+
+</body>
 </html>
